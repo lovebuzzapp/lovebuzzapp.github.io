@@ -1,22 +1,86 @@
-<!doctype html>
+﻿<!doctype html>
+<html>
 
-<html lang="en">
 <head>
-  <meta charset="utf-8">
-
-  <title>The HTML5 Herald</title>
-  <meta name="description" content="The HTML5 Herald">
-  <meta name="author" content="Claudiu Andrei">
-
-  <link rel="stylesheet" href="css/styles.css?v=1.0">
-
-  <!--[if lt IE 9]>
-  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
+  <title>unquote</title>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <script src="./components/platform/platform.js"></script>
+  <link rel="import" href="./components/font-roboto/roboto.html">
+  <link rel="import" href="./components/paper-input/paper-input.html">
+  <link rel="import" href="./components/paper-button/paper-button.html">
+  <link rel="import" href="./components/core-ajax/core-ajax.html">
+  <style>
+  html,body {
+    height: 100%;
+    background-size: cover;
+    background-image: url(./images/background.jpg);
+    background-repeat: no-repeat;
+    margin: 0;
+    background-color: #E5E5E5;
+    font-family: 'RobotoDraft', sans-serif;
+  }
+  .name {
+    color: #930;
+    font-weight: 200;
+    font-size: 72px;
+  }
+  .container {
+    background: rgba(255,255,255,0.25);
+    overflow: hidden;
+  }
+  .inner {
+    background: rgba(255,255,255,0.75);
+    opacity: 0.8;
+    padding: 40px;
+  }
+  @media (min-width: 481px) {
+    #tabs {
+      width: 200px;
+    }
+    .container {
+      width: 400px;
+    }
+  }
+  </style>
 </head>
 
-<body>
-  <h1>Hello from LoveBuzz</h1>
-  <script src="js/scripts.js"></script>
+<body unresolved touch-action="auto" vertical layout center center-justified>
+  <!-- Background, name, description, plugin the send action -->
+
+  <polymer-element name="email-form">
+  <template>
+    <div id="templateForm">
+      <paper-input label="Leave your email" pattern="*@*.*" floatingLabel value="{{email}}"></paper-input>
+      <paper-button label="Send" raisedButton class="colored" on-tap="{{doSend}}"></paper-button>
+      <core-ajax id="ajax" method="POST" contentType="application/json" url="https://api.parse.com/1/classes/Email"
+        headers='{"X-Parse-Application-Id": "Z3gpWkPPBrTbfiW3ZG6djx9obIcN18Hdw8V4hqig", "X-Parse-REST-API-Key": "bWA3mOtReGpjQgCnFaoDTQ93tHi4qzsOAMhdswgj"}'
+        body='{"Email":"{{email}}"}' on-core-response="{{showThanks}}"></core-ajax>
+      </div>
+      <div id="templateThanks" style="display: none;">
+        Thank you!
+      </div>
+  </template>
+  <script>
+  Polymer('email-form', {
+    doSend: function() {
+      this.$.ajax.go();
+    },
+    showThanks: function() {
+      this.$.templateForm.style.display = 'none';
+      this.$.templateThanks.style.display = 'block';
+    }
+  });
+  </script>
+  </polymer-element>
+
+  <div class="container" layout vertical center>
+    <h1 class="name">LOVEBUZZ</h1>
+    <div class="inner" layout vertical center>
+      <p>LOVEBUZZ puts love matching in the hands of women.</p>
+      <p>We are looking for beta testers, signup if you want to be among the first to test use the app.</p>
+      <email-form></email-form>
+    </div>
+  </div>
 </body>
+
 </html>
